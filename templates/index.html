@@ -1,0 +1,60 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>文件上傳示例</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 自訂 CSS -->
+    <style>
+        /* 自訂樣式 */
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>文件上傳示例</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        
+        <form method="post" action="/upload" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" class="form-control-file" name="file">
+            </div>
+            <button type="submit" class="btn btn-primary">上傳</button>
+        </form>
+        
+        <hr>
+        
+        <h2>已上傳的文件</h2>
+        <ul class="list-group">
+            {% for file in files %}
+                <li class="list-group-item">
+                    {{ file }}
+                    <a href="{{ url_for('download_file', filename=file) }}" class="btn btn-info btn-sm float-right">下載</a>
+                    <form method="post" action="{{ url_for('delete_file', filename=file) }}" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger btn-sm">刪除</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Bootstrap JS 和 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
